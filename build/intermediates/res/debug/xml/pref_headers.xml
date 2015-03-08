@@ -1,0 +1,9 @@
+<preference-headers xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <!-- These settings headers are only used on tablets. -->
+
+    <header
+        android:fragment="com.benny.calendarEvents.PrefsActivity$PrefsFragment"
+        />
+
+</preference-headers><!-- From: file:/drives/theRest/android/myProjects/Java/calendarEventsWidget/res/xml/pref_headers.xml -->

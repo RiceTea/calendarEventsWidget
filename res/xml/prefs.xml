@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <CheckBoxPreference
+        android:title="Show wakeup toast"
+        android:defaultValue="false"
+        android:summary="      Show a toast each alarm wakeup"
+        android:key="toast" />
+
+
+    <CheckBoxPreference
+        android:title="Debug mode"
+        android:defaultValue="false"
+        android:summary="      log all intents to a trace file"
+        android:key="debug" />
+
+</PreferenceScreen>

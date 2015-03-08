@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CalendarEvents</string>
+    <string name="preferences">Preferences</string>
+    <string name="refresh">Refresh</string>
+    <string name="none"> </string>
+
+    <string name="date_range_default">Default (today for one year)</string>
+    <string name="dates_preferences">Dates Preferences</string>
+    <string name="starting_year">startingYear</string>
+    <string name="starting_month">startingMonth</string>
+    <string name="starting_day">startingDay</string>
+    <string name="ending_year">endingYear</string>
+    <string name="ending_month">endingMonth</string>
+    <string name="ending_day">endingDay</string>
+
+
+    <string name="demo_min_label">Min</string>
+    <string name="demo_max_label">Max</string>
+
+
+</resources>

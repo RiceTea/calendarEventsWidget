@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- /res/layout/test_list_widget_layout.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/box1">
+
+    <RelativeLayout
+        android:id="@+id/top_column"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:background="@drawable/box1"
+        android:layout_width="fill_parent"
+        android:layout_height="150dp" >
+
+        <RelativeLayout
+            android:id="@+id/button_row"
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="35dp"
+            >
+
+            <ImageButton
+                android:id="@+id/refresh"
+                android:layout_alignParentTop="true"
+                android:layout_width="44dp"
+                android:layout_height="fill_parent"
+                android:background="@android:color/transparent"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                android:src="@drawable/refresh"
+                android:contentDescription="@string/none"
+                android:clickable="true"
+                android:layout_alignParentLeft="true">
+
+            </ImageButton>
+
+            <TextView
+                android:id="@+id/version"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:text=" "
+                android:gravity="center_horizontal"
+                android:layout_centerInParent="true"
+                android:layout_alignParentStart="false"
+                android:textSize="15sp"
+                />
+
+
+            <ImageButton
+                android:id="@+id/preferences"
+                android:layout_alignParentTop="true"
+                android:layout_width="44dp"
+                android:layout_height="fill_parent"
+                android:background="@android:color/transparent"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                android:src="@drawable/preferences"
+                android:contentDescription="@string/none"
+                android:clickable="true"
+                android:layout_alignParentRight="true">
+            </ImageButton>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/dates_row"
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="35dp"
+            android:layout_below="@id/button_row"
+            >
+            <TextView
+                android:id="@+id/date_range"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:text=" "
+                android:gravity="center_horizontal"
+                android:layout_centerInParent="true"
+                android:layout_alignParentStart="false"
+                android:textColor="#0fafac"
+                android:textSize="15sp"
+                />
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <!--
+
+-->
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:layout_gravity="center">
+        <ListView android:id="@+id/listwidget_list_view_id"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+        <TextView
+            android:id="@+id/listwidget_empty_view_id"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:visibility="gone"
+            android:textColor="#ffffff"
+            android:text="Empty Records View"
+            android:textSize="25sp" />
+    </FrameLayout>
+</LinearLayout>

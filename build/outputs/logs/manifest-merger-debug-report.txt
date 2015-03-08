@@ -1,0 +1,69 @@
+-- Merging decision tree log ---
+manifest
+ADDED from AndroidManifest.xml:2:1
+	xmlns:android
+		ADDED from AndroidManifest.xml:2:11
+	package
+		ADDED from AndroidManifest.xml:3:7
+	android:versionName
+		ADDED from AndroidManifest.xml:5:7
+	android:versionCode
+		ADDED from AndroidManifest.xml:4:7
+		INJECTED from AndroidManifest.xml:0:0
+		INJECTED from AndroidManifest.xml:0:0
+uses-sdk
+ADDED from AndroidManifest.xml:7:7
+	android:targetSdkVersion
+		ADDED from AndroidManifest.xml:9:9
+	android:minSdkVersion
+		ADDED from AndroidManifest.xml:8:9
+uses-permission#android.permission.READ_CALENDAR
+ADDED from AndroidManifest.xml:11:5
+	android:name
+		ADDED from AndroidManifest.xml:11:22
+uses-permission#android.permission.WRITE_CALENDAR
+ADDED from AndroidManifest.xml:12:5
+	android:name
+		ADDED from AndroidManifest.xml:12:22
+application
+ADDED from AndroidManifest.xml:14:5
+	android:label
+		ADDED from AndroidManifest.xml:15:8
+	android:icon
+		ADDED from AndroidManifest.xml:14:18
+activity#com.benny.calendarEvents.DateRangePreferences
+ADDED from AndroidManifest.xml:18:9
+	android:label
+		ADDED from AndroidManifest.xml:20:13
+	android:theme
+		ADDED from AndroidManifest.xml:21:13
+	android:name
+		ADDED from AndroidManifest.xml:19:13
+receiver#com.benny.calendarEvents.WidgetProvider
+ADDED from AndroidManifest.xml:27:9
+	android:name
+		ADDED from AndroidManifest.xml:27:19
+meta-data#android.appwidget.provider
+ADDED from AndroidManifest.xml:29:10
+	android:resource
+		ADDED from AndroidManifest.xml:30:21
+	android:name
+		ADDED from AndroidManifest.xml:29:21
+intent-filter#android.appwidget.action.APPWIDGET_UPDATE+com.appwidget.list.SHOW_PREFERENCES
+ADDED from AndroidManifest.xml:31:10
+action#android.appwidget.action.APPWIDGET_UPDATE
+ADDED from AndroidManifest.xml:32:14
+	android:name
+		ADDED from AndroidManifest.xml:32:22
+action#com.appwidget.list.SHOW_PREFERENCES
+ADDED from AndroidManifest.xml:33:17
+	android:name
+		ADDED from AndroidManifest.xml:33:25
+service#com.benny.calendarEvents.WidgetService
+ADDED from AndroidManifest.xml:38:4
+	android:exported
+		ADDED from AndroidManifest.xml:40:8
+	android:permission
+		ADDED from AndroidManifest.xml:39:8
+	android:name
+		ADDED from AndroidManifest.xml:38:13
