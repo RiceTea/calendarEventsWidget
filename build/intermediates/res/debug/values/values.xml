@@ -173,6 +173,7 @@
     <!-- From: file:/drives/theRest/android/myProjects/Java/calendarEventsWidget/res/values/strings.xml -->
     <eat-comment/>
     <string name="app_name">CalendarEvents</string>
+    <string name="calendar_grouping">Group by calendars</string>
     <string name="date_range_default">Default (today for one year)</string>
     <string name="dates_preferences">Dates Preferences</string>
     <string name="demo_max_label">Max</string>

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <TextView  xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/row_text"
+    android:id="@+id/widget_item"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:textAppearance="?android:attr/textAppearanceMedium"
     android:gravity="fill_horizontal"
+    android:background="@drawable/item_bg_dark"
     android:paddingLeft="5dip"
     android:minHeight="?android:attr/listPreferredItemHeight"
     android:text=""
 />
-<!-- From: file:/drives/theRest/android/myProjects/Java/calendarEventsWidget/res/layout/row.xml -->

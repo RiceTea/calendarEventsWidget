@@ -183,58 +183,61 @@ containing a value of this type.
         public static final int yellow=0x7f06008c;
     }
     public static final class drawable {
-        public static final int blue=0x7f02000a;
+        public static final int blue=0x7f02000b;
         public static final int box1=0x7f020000;
         public static final int calendar=0x7f020001;
         public static final int customtoastborder=0x7f020002;
-        public static final int darkblue=0x7f02000b;
-        public static final int darkgreen=0x7f02000c;
-        public static final int darkorange=0x7f02000d;
-        public static final int darkpurple=0x7f02000e;
-        public static final int darkred=0x7f02000f;
-        public static final int green=0x7f020010;
+        public static final int darkblue=0x7f02000c;
+        public static final int darkgreen=0x7f02000d;
+        public static final int darkorange=0x7f02000e;
+        public static final int darkpurple=0x7f02000f;
+        public static final int darkred=0x7f020010;
+        public static final int green=0x7f020011;
         public static final int ic_launcher=0x7f020003;
-        public static final int layer_list=0x7f020004;
-        public static final int orange=0x7f020011;
-        public static final int preferences=0x7f020005;
-        public static final int purple=0x7f020012;
-        public static final int red=0x7f020013;
-        public static final int refresh=0x7f020006;
-        public static final int screen_background_black=0x7f020014;
-        public static final int seek_thumb_disabled=0x7f020007;
-        public static final int seek_thumb_normal=0x7f020008;
-        public static final int seek_thumb_pressed=0x7f020009;
-        public static final int translucent_background=0x7f020015;
-        public static final int transparent_background=0x7f020016;
-        public static final int yellow=0x7f020017;
+        public static final int item_bg_dark=0x7f020004;
+        public static final int layer_list=0x7f020005;
+        public static final int orange=0x7f020012;
+        public static final int preferences=0x7f020006;
+        public static final int purple=0x7f020013;
+        public static final int red=0x7f020014;
+        public static final int refresh=0x7f020007;
+        public static final int screen_background_black=0x7f020015;
+        public static final int seek_thumb_disabled=0x7f020008;
+        public static final int seek_thumb_normal=0x7f020009;
+        public static final int seek_thumb_pressed=0x7f02000a;
+        public static final int translucent_background=0x7f020016;
+        public static final int transparent_background=0x7f020017;
+        public static final int yellow=0x7f020018;
     }
     public static final class id {
-        public static final int button_row=0x7f0a000c;
-        public static final int changeEndDate=0x7f0a0008;
-        public static final int changeStartDate=0x7f0a0005;
-        public static final int chkDefaultDateRange=0x7f0a0003;
+        public static final int button_row=0x7f0a000e;
+        public static final int changeEndDate=0x7f0a000b;
+        public static final int changeStartDate=0x7f0a0008;
+        public static final int chkDefaultDateRange=0x7f0a0006;
+        public static final int chkGroupByCalendars=0x7f0a0004;
         public static final int custom_toast_layout_id=0x7f0a0000;
-        public static final int date_range=0x7f0a0011;
-        public static final int dates_row=0x7f0a0010;
-        public static final int end_datepicker=0x7f0a0009;
-        public static final int linearRow1=0x7f0a0002;
-        public static final int linearRow2=0x7f0a0004;
+        public static final int date_range=0x7f0a0013;
+        public static final int dates_row=0x7f0a0012;
+        public static final int end_datepicker=0x7f0a000c;
+        public static final int linearRow1=0x7f0a0003;
+        public static final int linearRow2=0x7f0a0005;
         public static final int linearRow3=0x7f0a0007;
-        public static final int listwidget_empty_view_id=0x7f0a0013;
-        public static final int listwidget_list_view_id=0x7f0a0012;
-        public static final int outerRectangle=0x7f0a0014;
-        public static final int preferences=0x7f0a000f;
-        public static final int refresh=0x7f0a000d;
-        public static final int row_text=0x7f0a000a;
-        public static final int start_datepicker=0x7f0a0006;
+        public static final int linearRow4=0x7f0a000a;
+        public static final int listwidget_empty_view_id=0x7f0a0015;
+        public static final int listwidget_list_view_id=0x7f0a0014;
+        public static final int outerRectangle=0x7f0a0016;
+        public static final int preferences=0x7f0a0011;
+        public static final int refresh=0x7f0a000f;
+        public static final int start_datepicker=0x7f0a0009;
         public static final int toastText=0x7f0a0001;
-        public static final int top_column=0x7f0a000b;
-        public static final int version=0x7f0a000e;
+        public static final int top_column=0x7f0a000d;
+        public static final int version=0x7f0a0010;
+        public static final int widget_item=0x7f0a0002;
     }
     public static final class layout {
         public static final int customtoast=0x7f030000;
-        public static final int datetimepicker=0x7f030001;
-        public static final int row=0x7f030002;
+        public static final int dark_row=0x7f030001;
+        public static final int datetimepicker=0x7f030002;
         public static final int widget=0x7f030003;
     }
     public static final class menu {
@@ -242,19 +245,20 @@ containing a value of this type.
     }
     public static final class string {
         public static final int app_name=0x7f070000;
-        public static final int date_range_default=0x7f070001;
-        public static final int dates_preferences=0x7f070002;
-        public static final int demo_max_label=0x7f070003;
-        public static final int demo_min_label=0x7f070004;
-        public static final int ending_day=0x7f070005;
-        public static final int ending_month=0x7f070006;
-        public static final int ending_year=0x7f070007;
-        public static final int none=0x7f070008;
-        public static final int preferences=0x7f070009;
-        public static final int refresh=0x7f07000a;
-        public static final int starting_day=0x7f07000b;
-        public static final int starting_month=0x7f07000c;
-        public static final int starting_year=0x7f07000d;
+        public static final int calendar_grouping=0x7f070001;
+        public static final int date_range_default=0x7f070002;
+        public static final int dates_preferences=0x7f070003;
+        public static final int demo_max_label=0x7f070004;
+        public static final int demo_min_label=0x7f070005;
+        public static final int ending_day=0x7f070006;
+        public static final int ending_month=0x7f070007;
+        public static final int ending_year=0x7f070008;
+        public static final int none=0x7f070009;
+        public static final int preferences=0x7f07000a;
+        public static final int refresh=0x7f07000b;
+        public static final int starting_day=0x7f07000c;
+        public static final int starting_month=0x7f07000d;
+        public static final int starting_year=0x7f07000e;
     }
     public static final class style {
         public static final int PreferenceTheme=0x7f080000;

@@ -11,6 +11,6 @@ vertical scrolling in a widget.
 
 It uses RemoteViewsFactory to achieve this.
 The list is populated with Google calendar events using a preferences date range.
-They are sorted by start date and grouped by date. The type of event determines
-the title text colour.
+They are either sorted by start date and grouped by date or by calendar and date.
+The type of event determines the title text colour.
 
