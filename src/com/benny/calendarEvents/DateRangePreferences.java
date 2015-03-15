@@ -18,22 +18,15 @@ package com.benny.calendarEvents;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
-import android.widget.DatePicker.OnDateChangedListener;
 import android.widget.Toast;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 
 
 public class DateRangePreferences extends Activity {
@@ -41,9 +34,10 @@ public class DateRangePreferences extends Activity {
   DatePicker startDate;
   DatePicker endDate;
   String DatesPreferences = "DatesPreferences";
-  String useDefault = "useDefaultDateRange";
+  String useDefaultDateRange = "useDefaultDateRange";
+  String useCalendarGrouping = "useCalendarGrouping";
   Button startDateButton, endDateButton;
-  CheckBox chkDefaultDateRange;
+  CheckBox chkDefaultDateRange, chkCalendarGrouping;
 
 
   @Override
@@ -51,12 +45,45 @@ public class DateRangePreferences extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.datetimepicker);
     final Context mContext = getApplicationContext();
+    final SharedPreferences prefs;
+
+    chkCalendarGrouping = (CheckBox) findViewById(R.id.chkGroupByCalendars);
     chkDefaultDateRange = (CheckBox) findViewById(R.id.chkDefaultDateRange);
 
-    final SharedPreferences prefs;
     prefs = mContext.getSharedPreferences(DatesPreferences, MODE_PRIVATE);
-    boolean isDefault =   prefs.getBoolean(useDefault, true);
-    if (isDefault) {
+
+
+    // ---------------------------------------------------------------------- //
+    boolean isCalendarGrouping =   prefs.getBoolean(useCalendarGrouping, false);
+    if (isCalendarGrouping) {
+      chkCalendarGrouping.setChecked(true);
+    }
+    else {
+      chkCalendarGrouping.setChecked(false);
+    }
+
+    chkCalendarGrouping.setOnClickListener(new View.OnClickListener(){
+      @Override
+      public void onClick(View view) {
+        final SharedPreferences.Editor editor;
+        editor = getSharedPreferences(DatesPreferences, MODE_PRIVATE).edit();
+
+        if (((CheckBox) view).isChecked()) {
+          editor.putBoolean(useCalendarGrouping, true);
+//                Toast tNo = Toast.makeText(mContext,"CheckBox --yes--",Toast.LENGTH_LONG); tNo.show();
+        }
+        else {
+          editor.putBoolean(useCalendarGrouping, false);
+//          Toast tNo = Toast.makeText(mContext,"CheckBox --no--",Toast.LENGTH_LONG); tNo.show();
+        }
+        editor.commit();
+      }
+    });
+
+
+    // ---------------------------------------------------------------------- //
+    boolean isDefaultDateRange =   prefs.getBoolean(useDefaultDateRange, true);
+    if (isDefaultDateRange) {
       setDefault(mContext);
       chkDefaultDateRange.setChecked(true);
     }
@@ -64,7 +91,6 @@ public class DateRangePreferences extends Activity {
       setDates(mContext);
       chkDefaultDateRange.setChecked(false);
     }
-
 
     chkDefaultDateRange.setOnClickListener(new View.OnClickListener(){
       @Override
@@ -74,17 +100,19 @@ public class DateRangePreferences extends Activity {
 
     if (((CheckBox) view).isChecked()) {
       setDefault(mContext);
-      editor.putBoolean(useDefault, true);
+      editor.putBoolean(useDefaultDateRange, true);
       }
     else {
       setDates(mContext);
-      editor.putBoolean(useDefault, false);
-//      Toast tNo = Toast.makeText(mContext,"CheckBox --no--",Toast.LENGTH_LONG); tNo.show();
-//      Toast tYes = Toast.makeText(mContext,"checked:"+tempStartYear+":"+tempStartMonth+":"+tempStartDay+":",Toast.LENGTH_LONG); tYes.show();
+      editor.putBoolean(useDefaultDateRange, false);
     }
     editor.commit();
       }
     });
+
+
+
+
 
 
     startDateButton = (Button) findViewById(R.id.changeStartDate);

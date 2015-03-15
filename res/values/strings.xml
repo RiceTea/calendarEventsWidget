@@ -6,6 +6,7 @@
     <string name="none"> </string>
 
     <string name="date_range_default">Default (today for one year)</string>
+    <string name="calendar_grouping">Group by calendars</string>
     <string name="dates_preferences">Dates Preferences</string>
     <string name="starting_year">startingYear</string>
     <string name="starting_month">startingMonth</string>

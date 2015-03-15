@@ -15,15 +15,30 @@
         android:layout_height="wrap_content">
 
         <CheckBox
+            android:id="@+id/chkGroupByCalendars"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/calendar_grouping" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:id="@+id/linearRow2"
+        android:layout_gravity="top|start"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <CheckBox
             android:id="@+id/chkDefaultDateRange"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/date_range_default" />
     </LinearLayout>
 
+
     <LinearLayout
         android:orientation="horizontal"
-        android:id="@+id/linearRow2"
+        android:id="@+id/linearRow3"
         android:layout_gravity="bottom|left"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
@@ -45,7 +60,7 @@
 
     <LinearLayout
         android:orientation="horizontal"
-        android:id="@+id/linearRow3"
+        android:id="@+id/linearRow4"
         android:layout_gravity="bottom|center"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">

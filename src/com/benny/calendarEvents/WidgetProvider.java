@@ -36,6 +36,9 @@ package com.benny.calendarEvents;
 // 4 Mar 2015
 // finished initial coding for preferences
 
+// 15 Mar 2015
+// added preference for displaying the list in calendar sequence
+
 // TODO header not being updated when preference change or refresh
 // TODO savedInstance
 
@@ -47,22 +50,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
 import android.text.Html;
 import android.text.Spanned;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.DatePicker;
 import android.widget.RemoteViews;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -76,7 +73,7 @@ public class WidgetProvider extends AppWidgetProvider
   private static final String tag = "WidgetProvider";
   public static String SHOW_PREFERENCES = "SHOW_PREFERENCES";
   public static String REFRESH = "REFRESH";
-  String version = " version (c3) ";               // ******************************************** //
+  String version = " version (e1) ";               // ******************************************** //
   String widgetName = "CalendarEvents";
   String buttonCode="empty";
   Rect sourceBounds;
@@ -348,7 +345,7 @@ public class WidgetProvider extends AppWidgetProvider
   // duration is parsed in seconds
   protected void showToast(Context context,Spanned toastMessage, int colour, int duration) {
     Context mContext = context;
-    xOffset = 200; yOffset = 450;
+    xOffset = 50; yOffset = 450;
 
     LayoutInflater mInflater;
     mInflater = LayoutInflater.from(mContext);

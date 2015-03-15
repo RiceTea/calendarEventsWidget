@@ -18,6 +18,7 @@
             android:id="@+id/button_row"
             android:orientation="horizontal"
             android:layout_width="fill_parent"
+            android:background="@drawable/item_bg_dark"
             android:layout_height="35dp"
             >
 
@@ -69,6 +70,7 @@
             android:orientation="horizontal"
             android:layout_width="fill_parent"
             android:layout_height="35dp"
+            android:background="@drawable/item_bg_dark"
             android:layout_below="@id/button_row"
             >
             <TextView

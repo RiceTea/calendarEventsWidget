@@ -8,22 +8,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.provider.CalendarContract;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -45,17 +42,32 @@ class WidgetDisplay implements RemoteViewsService.RemoteViewsFactory {
   int requestCode1 = 1;
   public static  long milliseconds = 60*60*1000;     // one hour
   Boolean once = false;
+  boolean isDefaultDateRange;
+  boolean isCalendarMajor;
+  String calendarIDKey = "6";
+  Calendar calStart;
+  Calendar calEnd;
 
+
+
+
+  SharedPreferences prefs;
 
   String dateRangeString;
   String DatesPreferences = "DatesPreferences";
   String useDefault = "useDefaultDateRange";
+  String useCalendarGrouping = "useCalendarGrouping";
 
-
+  String aFewSpaces = "&nbsp;&nbsp;&nbsp;&nbsp;";
   String someSpaces = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+  String headerString = "<!--header-->";
+//  Spanned spanTest;
+//  String spanTestString;
 
-  List<Spanned> mCollections = new ArrayList<Spanned>();
-  List<Spanned> mRows = new ArrayList<Spanned>();
+
+  List<Spanned> mCollections = new ArrayList<>();
+  HashMap<String, String> calendarMap =  new HashMap<>();
+  HashMap<String, Integer> calendarColourMap =  new HashMap<>();
 
   // ----------------------------------------------------------------------- //
   //public static  long milliseconds = AlarmManager.INTERVAL_HOUR;
@@ -115,11 +127,23 @@ class WidgetDisplay implements RemoteViewsService.RemoteViewsFactory {
 
   public RemoteViews getViewAt(int position) {
     Spanned span = mCollections.get(position);
+    RemoteViews rvRow;
+    String temp = span.toString();
 
-    //Log.d(tag,"getView called: " + (position+1));
-    RemoteViews rvRow = new RemoteViews(mContext.getPackageName(),
-        R.layout.row);
-    rvRow.setTextViewText(R.id.row_text, span);
+    rvRow = new RemoteViews(mContext.getPackageName(), R.layout.dark_row);
+    rvRow.setTextViewText(R.id.widget_item, span);
+
+    // use the correct calendar colour for the background of the calendar names
+    if (temp.contains("---")) {
+      int startIndex = temp.indexOf("---");
+      int endIndex = startIndex+3+temp.substring(startIndex+3).indexOf("---");
+      int calendarColour =  calendarColourMap.get(temp.substring(startIndex+3, endIndex));
+      // TODO possibly make background have some transparency
+      rvRow.setInt(R.id.widget_item, "setBackgroundColor",  calendarColour);
+    }
+    else {
+      rvRow.setInt(R.id.widget_item, "setBackgroundColor",  Color.argb(54,161,162,156));
+    }
 
     this.loadItemOnClickExtras(rvRow, position);
     return rvRow;
@@ -137,7 +161,7 @@ class WidgetDisplay implements RemoteViewsService.RemoteViewsFactory {
 
     ei.putExtra(WidgetProvider.EXTRA_LIST_ITEM_TEXT,""+span);
 
-    rv.setOnClickFillInIntent(R.id.row_text, ei);
+    rv.setOnClickFillInIntent(R.id.widget_item, ei);
   }
 
   //This allows for the use of a custom loading view
@@ -179,26 +203,27 @@ class WidgetDisplay implements RemoteViewsService.RemoteViewsFactory {
 
   // used an asynchronous task and it caused all sorts of problems
   // then did the calendar calls synchronously and it works!
+
+  // ----------------------------------------------------------------------- //
+  //                           onDataSetChanged                              //
+  // ----------------------------------------------------------------------- //
   public void onDataSetChanged() {
-    SharedPreferences prefs;
     prefs = mContext.getSharedPreferences(DatesPreferences, Context.MODE_PRIVATE);
-    Calendar calStart;
-    Calendar calEnd;
+    isDefaultDateRange =   prefs.getBoolean(useDefault, true);
+    isCalendarMajor =   prefs.getBoolean(useCalendarGrouping, false);
 
-    ContentResolver contentResolver = mContext.getContentResolver();
-    Cursor cursor;
-    String selection = "((" + CalendarContract.Events.DTSTART +
-        " >= ?) AND (" + CalendarContract.Events.DTEND + " <= ?))";
 
-    boolean isDefault =   prefs.getBoolean(useDefault, true);
-    if (isDefault) {
+    mCollections.clear();
+    calendarMap.clear();
+    calendarColourMap.clear();
+
+    if (isDefaultDateRange) {
       // set today for one year if using default preference
       calStart = Calendar.getInstance();
       calEnd = Calendar.getInstance();
       calEnd.add(Calendar.DATE, 52*7); // add a year
     }
     else {
-
       int tempYear = prefs.getInt("startingYear", 2015);
       int tempMonth = prefs.getInt("startingMonth", 0);
       int tempDay = prefs.getInt("startingDay", 1);
@@ -212,21 +237,73 @@ class WidgetDisplay implements RemoteViewsService.RemoteViewsFactory {
       calEnd.set(tempYear, tempMonth, tempDay);
     }
 
+    if (isCalendarMajor) {
+      ContentResolver contentResolver = mContext.getContentResolver();
+      Cursor calendarCursor = contentResolver.query(CalendarContract.Calendars.CONTENT_URI, null, null, null, null);
+      while (calendarCursor.moveToNext()) {
+        int calendarIDIndex = calendarCursor.getColumnIndex(CalendarContract.Calendars._ID);
+        String calendarID = calendarCursor.getString(calendarIDIndex);
+        int calendarIndex = calendarCursor.getColumnIndex(CalendarContract.Calendars.CALENDAR_DISPLAY_NAME);
+        String calendar = calendarCursor.getString(calendarIndex);
+        int calendarColourIndex = calendarCursor.getColumnIndex(CalendarContract.Calendars.CALENDAR_COLOR);
+        int calendarColour = calendarCursor.getInt(calendarColourIndex);
+        // add to a dictionary skipping unwanted entries
+        if (calendar.contains("@")) { continue; }
+        if (calendar.contains("Birthdays")) { continue; }
+        calendarIDKey = calendarID;
+        calendarMap.put(calendarID, calendar);
+        calendarColourMap.put(calendar, calendarColour);
+        loopThroughRows();
+      }
+      calendarCursor.close();
+    }
+    else
+      {loopThroughRows();}
+
+  } // end of onDataSetChanged
+
+
+  // ----------------------------------------------------------------------- //
+  //                           loopThroughRows                               //
+  // ----------------------------------------------------------------------- //
+  public void loopThroughRows() {
+    ContentResolver contentResolver = mContext.getContentResolver();
+    Cursor cursor;
     String stringDateStartInMillseconds = Long.toString(calStart.getTimeInMillis());
     String stringDateEndinMilliseconds = Long.toString(calEnd.getTimeInMillis());
+    String[] selectionArgs;
+    Spanned spanCalendars;
+    String spanCalendarsString;
+
+    String selection;
+    String datesSelection    = "( (" + CalendarContract.Events.DTSTART + " >= ?) AND (" + CalendarContract.Events.DTEND + " <= ?) )";
+    String calendarSelection = "( (" + CalendarContract.Events.DTSTART + " >= ?) AND (" + CalendarContract.Events.DTEND + " <= ?) AND (" + CalendarContract.Events.CALENDAR_ID + " = ?) )";
 
 
-    String[] selectionArgs = new String[] { stringDateStartInMillseconds, stringDateEndinMilliseconds };
+    if (isCalendarMajor) {
+      selection = calendarSelection;
+      selectionArgs = new String[]{stringDateStartInMillseconds, stringDateEndinMilliseconds, calendarIDKey};
+    } else {
+      selection = datesSelection;
+      selectionArgs = new String[]{stringDateStartInMillseconds, stringDateEndinMilliseconds};
+    }
+
+
     // get the calendar rows in start date sequence
-    cursor = contentResolver.query(CalendarContract.Events.CONTENT_URI,
-        null, selection, selectionArgs, "dtstart ASC");
+    cursor = contentResolver.query(CalendarContract.Events.CONTENT_URI,  null, selection, selectionArgs, "dtstart ASC");
+    // do not create empty list rows
+    if (cursor.getCount() ==0) {return; }
 
-    mCollections.clear();
-    mRows.clear();
+    // only output calendar name when there are rows
+    if (isCalendarMajor) {
+      spanCalendarsString = headerString + "<br><b><font color='#0f0f0f0f'>" + aFewSpaces + "---" +calendarMap.get(calendarIDKey) + "---</font>";
+      spanCalendars = Html.fromHtml(spanCalendarsString);
+      mCollections.add(spanCalendars);
+    }
+
     Spanned span;
     String lastStartDate = "";
     String spanStr;
-    String rowStr;
 
     Date dateStart = calStart.getTime();
     SimpleDateFormat dmyFormatter = new SimpleDateFormat("dd MMM yyyy");
@@ -237,7 +314,6 @@ class WidgetDisplay implements RemoteViewsService.RemoteViewsFactory {
     span = Html.fromHtml(spanStr);
     final RemoteViews rvWidget = new RemoteViews(mContext.getPackageName(), R.layout.widget);
     rvWidget.setTextViewText(R.id.date_range, span);
-//    mCollections.add(span);
 
     spanStr = "";
     while (cursor.moveToNext()) {
@@ -258,13 +334,6 @@ class WidgetDisplay implements RemoteViewsService.RemoteViewsFactory {
       SimpleDateFormat sdf = new SimpleDateFormat("E dd MMM");
       String strStartDate = sdf.format(startDate);
 
-//      Log.i(tag,"-----------------------------------------------------------\n");
-//      Log.i(tag,"title: "+title+"\n");
-//      Log.i(tag,"description: "+description+"\n");
-//      Log.i(tag,"startDate: "+startDate+"\n");
-//      Log.i(tag,"colour: "+colour+"\n");
-//      Log.i(tag,"colour: "+hexColour+"\n");
-
       // new date - only comparing date, not time
       if (!strStartDate.equals(lastStartDate)) {
         // ignore first pass as spanStr will be empty
@@ -273,31 +342,20 @@ class WidgetDisplay implements RemoteViewsService.RemoteViewsFactory {
           mCollections.add(span);
         }
         spanStr = "<b><font color='#fffffc'>" + strStartDate + "</font>";
-        // always output each new date
-        mRows.add(Html.fromHtml(spanStr));
       }
 
 
       // show the title using the calendar event colour
-      spanStr += "<br><b><small><font color='" + hexColour + "'>" + someSpaces+title   + "</font></small>";
-      rowStr = "<b><small><font color='" + hexColour + "'>" + someSpaces+title   + "</font></small>";
-      mRows.add(Html.fromHtml(rowStr));
+      spanStr += "<br><b><small><font color='" + hexColour + "'>"  +  someSpaces+title+ "</font></small>";
 
       if (location.length() > 0) {
         spanStr += "<br><b><small><font color='" + hexColour + "'>" + someSpaces+"at "+location   + "</font></small>";
-        rowStr = "<b><small><font color='" + hexColour + "'>" + someSpaces+"at "+location   + "</font></small>";
-        mRows.add(Html.fromHtml(rowStr));
       }
 
       lastStartDate = strStartDate;
 
-      // put a coloured box in front of the title
-      //"<br><big><font  color='" + hexColor + "'>&#9632; "   + "</font></big>" +
-
       if (description.length() > 1)      {
         spanStr +=  "<br><b><font color='#ffb49a'>" + description + ":</font>";
-        rowStr =  "<b><font color='#ffb49a'>" + description + ":</font>";
-        mRows.add(Html.fromHtml(rowStr));
       }
 
     }  // end of moving through cursor
@@ -306,15 +364,70 @@ class WidgetDisplay implements RemoteViewsService.RemoteViewsFactory {
     span = Html.fromHtml(spanStr);
     mCollections.add(span);
 
-//    mCollections = mRows;  // use separate rows for details
     numberOfItems = mCollections.size();
-
-    Log.i(tag,"number of calendar events: "+numberOfItems+"\n");
-  } // end of onDataSetChanged
+    }  // end of loopThroughRows
 
 
-}  // end of WidgetDisplay class
 
+  }  // end of WidgetDisplay class
+
+
+
+
+
+
+
+
+//    Spanned spanTest;
+//    String spanTestString;
+//    spanTestString = "<br><b><font color='#0f0ffc'>" + selection + " </font>";
+//    spanTest = Html.fromHtml(spanTestString);
+//    mCollections.add(spanTest);
+//
+
+
+
+
+
+
+// put a coloured box in front of the title
+//"<br><big><font  color='" + hexColor + "'>&#9632; "   + "</font></big>" +
+
+
+//    Uri uri = CalendarContract.Calendars.CONTENT_URI;
+//    String[] projection = new String[] {
+//        CalendarContract.Calendars._ID,
+//        CalendarContract.Calendars.ACCOUNT_NAME,
+//        CalendarContract.Calendars.CALENDAR_DISPLAY_NAME,
+//        CalendarContract.Calendars.NAME,
+//        CalendarContract.Calendars.CALENDAR_COLOR
+//    };
+
+
+
+//      Log.i(tag,"-----------------------------------------------------------\n");
+//      Log.i(tag,"title: "+title+"\n");
+//      Log.i(tag,"description: "+description+"\n");
+//      Log.i(tag,"startDate: "+startDate+"\n");
+//      Log.i(tag,"colour: "+colour+"\n");
+//      Log.i(tag,"colour: "+hexColour+"\n");
+
+
+
+//    // verify dictionary is valid
+//    for (String key : calendarMap.keySet()) {
+//      spanCalendarsString += "<br><b><font color='#ff0f0c'>" + key + ":"  + calendarMap.get(key) + " </font>";
+//    }
+//
+//    spanCalendars = Html.fromHtml(spanCalendarsString);
+//    mCollections.add(spanCalendars);
+
+//    String selectionTest = "((" + CalendarContract.Events.DTSTART +
+//        " >= %s) AND (" + CalendarContract.Events.DTEND + " <= %s))";
+//    String formatted = String.format(selectionTest, stringDateStartInMillseconds, stringDateEndinMilliseconds);
+//    Spanned spanTest = Html.fromHtml(formatted);
+//    mCollections.add(spanTest);
+//    cursor = contentResolver.query(CalendarContract.Events.CONTENT_URI,  null, formatted, null, "dtstart ASC");
 
 
 
