@@ -42,6 +42,12 @@ package com.benny.calendarEvents;
 // 17 Mar 2015
 // removed unused lines
 // added opacity to calendar names rows
+// made calendar sequence list use calendar name instead of calendar ID
+// added code to select from previous day when using the default date range.
+// items were not being returned if their time had passed even though they were from today.
+// any previous days when using the default date range are ignored.
+
+//
 
 // TODO header not being updated when preference change or refresh
 // TODO savedInstance
@@ -77,15 +83,16 @@ public class WidgetProvider extends AppWidgetProvider
   private static final String tag = "WidgetProvider";
   public static String SHOW_PREFERENCES = "SHOW_PREFERENCES";
   public static String REFRESH = "REFRESH";
-  String version = " version (e1) ";               // ******************************************** //
+  String version = " version (e4) ";               // ******************************************** //
   String widgetName = "CalendarEvents";
   String buttonCode="empty";
   Rect sourceBounds;
   int xOffset = 0, yOffset = 0;
   int toastBackgroundColour;
 
-  String DatesPreferences = "DatesPreferences";
-  String useDefault = "useDefaultDateRange";
+//  String DatesPreferences = "DatesPreferences";
+//  String useDefault = "useDefaultDateRange";
+  GlobalFunctions myFunctions;
 
 
   public static final String ACTION_LIST_CLICK =
@@ -103,6 +110,7 @@ public class WidgetProvider extends AppWidgetProvider
 //    Toast t = Toast.makeText(context,"onUpdate called",Toast.LENGTH_LONG); t.show();
 
     Log.d(tag, "onUpdate called");
+
     final int N = allWidgetIds.length;
     Log.d(tag, "Number of widgets: " + N);
 
@@ -304,30 +312,35 @@ public class WidgetProvider extends AppWidgetProvider
     Calendar calStart;
     Calendar calEnd;
 
-    SharedPreferences prefs;
-    prefs = context.getSharedPreferences(DatesPreferences, Context.MODE_PRIVATE);
-    boolean isDefault =   prefs.getBoolean(useDefault, true);
+//    SharedPreferences prefs;
+//    prefs = context.getSharedPreferences(DatesPreferences, Context.MODE_PRIVATE);
+//    boolean isDefault =   prefs.getBoolean(useDefault, true);
 
-    if (isDefault) {
-      // set today for one year if using default preference
-      calStart = Calendar.getInstance();
-      calEnd = Calendar.getInstance();
-      calEnd.add(Calendar.DATE, 52*7); // add a year
-    }
-    else {
-      // otherwise, get date range from preferences
-      int tempYear =  prefs.getInt("startingYear", 2015);
-      int tempMonth =  prefs.getInt("startingMonth", 1);
-      int tempDay =  prefs.getInt("startingDay", 1);
-      calStart = Calendar.getInstance();
-      calStart.set(tempYear,tempMonth,tempDay);
+    myFunctions = new GlobalFunctions(context);
+    Object Object[] = myFunctions.getDateRange();  // vjvj
+    calStart = (Calendar)Object[0];
+    calEnd = (Calendar)Object[1];
 
-      tempYear =  prefs.getInt("endingYear", 2016);
-      tempMonth =  prefs.getInt("endingMonth", 11);
-      tempDay =  prefs.getInt("endingDay", 31);
-      calEnd = Calendar.getInstance();
-      calEnd.set(tempYear,tempMonth,tempDay);
-    }
+//    if (isDefault) {
+//      // set today for one year if using default preference
+//      calStart = Calendar.getInstance();
+//      calEnd = Calendar.getInstance();
+//      calEnd.add(Calendar.DATE, 52*7); // add a year
+//    }
+//    else {
+//      // otherwise, get date range from preferences
+//      int tempYear =  prefs.getInt("startingYear", 2015);
+//      int tempMonth =  prefs.getInt("startingMonth", 1);
+//      int tempDay =  prefs.getInt("startingDay", 1);
+//      calStart = Calendar.getInstance();
+//      calStart.set(tempYear,tempMonth,tempDay);
+//
+//      tempYear =  prefs.getInt("endingYear", 2016);
+//      tempMonth =  prefs.getInt("endingMonth", 11);
+//      tempDay =  prefs.getInt("endingDay", 31);
+//      calEnd = Calendar.getInstance();
+//      calEnd.set(tempYear,tempMonth,tempDay);
+//    }
 
     Spanned span;
     String spanStr;

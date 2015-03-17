@@ -13,6 +13,7 @@ import android.provider.CalendarContract;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
+import android.view.Gravity;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
@@ -22,6 +23,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 
 public class WidgetService extends RemoteViewsService {
@@ -46,6 +49,7 @@ class WidgetDisplay implements RemoteViewsService.RemoteViewsFactory {
   String calendarIDKey = "6";
   Calendar calStart;
   Calendar calEnd;
+  Calendar calToday;
 
 
   SharedPreferences prefs;
@@ -61,6 +65,7 @@ class WidgetDisplay implements RemoteViewsService.RemoteViewsFactory {
 
   List<Spanned> mCollections = new ArrayList<>();
   HashMap<String, String> calendarMap =  new HashMap<>();
+  TreeMap<String, String> sortedCalendarMap =  new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
   HashMap<String, Integer> calendarColourMap =  new HashMap<>();
 
 
@@ -116,20 +121,41 @@ class WidgetDisplay implements RemoteViewsService.RemoteViewsFactory {
 
 
   public RemoteViews getViewAt(int position) {
+    int textSize = 18;
+
     Spanned span = mCollections.get(position);
     RemoteViews rvRow;
     String temp = span.toString();
 
     rvRow = new RemoteViews(mContext.getPackageName(), R.layout.dark_row);
+    rvRow.setFloat(R.id.widget_item, "setTextSize", textSize);
     rvRow.setTextViewText(R.id.widget_item, span);
 
     // use the correct calendar colour for the background of the calendar names
     if (temp.contains("---")) {
       int startIndex = temp.indexOf("---");
       int endIndex = startIndex+3+temp.substring(startIndex+3).indexOf("---");
-      int calendarColour =  calendarColourMap.get(temp.substring(startIndex+3, endIndex));
-      // using opacity of 112
+      String calendarName = temp.substring(startIndex+3, endIndex);
+      int calendarColour =  calendarColourMap.get(calendarName);
+      // using opacity for background
+//      rvRow.setSInt(R.id.widget_item, "setGravity", Gravity.CENTER);
+//      rvRow.setString(R.id.widget_item, "setGravity", Gravity.CENTER);
       rvRow.setInt(R.id.widget_item, "setBackgroundColor",  Color.parseColor(String.format("#%06X", (0x70FFFFFF & calendarColour))));
+      rvRow.setFloat(R.id.widget_item, "setTextSize", (int) (textSize*1.5));
+      // remove '---' from calendar names
+//      String spanStr;
+//      spanStr = "<p center><b>" + calendarName +"</p>";
+//      span = Html.fromHtml(spanStr);
+
+
+      rvRow.setTextViewText(R.id.widget_item, calendarName);
+
+      float[] hueSaturationValue = new float[3];
+      Color.colorToHSV(calendarColour, hueSaturationValue);
+      hueSaturationValue[0] =  (hueSaturationValue[0])*0.9f;
+      hueSaturationValue[1] = 1.0f - 0.2f * (1.0f - hueSaturationValue[1]);
+      hueSaturationValue[2] = 1.0f - 0.2f * (1.0f - hueSaturationValue[2]);
+      rvRow.setTextColor(R.id.widget_item, Color.HSVToColor(hueSaturationValue));
     }
     else {
       rvRow.setInt(R.id.widget_item, "setBackgroundColor",  Color.argb(54,161,162,156));
@@ -200,17 +226,29 @@ class WidgetDisplay implements RemoteViewsService.RemoteViewsFactory {
   public void onDataSetChanged() {
     prefs = mContext.getSharedPreferences(DatesPreferences, Context.MODE_PRIVATE);
     isDefaultDateRange =   prefs.getBoolean(useDefault, true);
-    isCalendarMajor =   prefs.getBoolean(useCalendarGrouping, false);
+    isCalendarMajor =      prefs.getBoolean(useCalendarGrouping, false);
 
 
     mCollections.clear();
     calendarMap.clear();
+    sortedCalendarMap.clear();
     calendarColourMap.clear();
+
+    // crashes
+//    GlobalFunctions myFunctions;
+//    myFunctions = new GlobalFunctions(mContext);
+//    Object Object[] = myFunctions.getDateRange();  // vjvj
+//    calStart = (Calendar)Object[0];
+//    calEnd = (Calendar)Object[1];
+
 
     if (isDefaultDateRange) {
       // set today for one year if using default preference
       calStart = Calendar.getInstance();
+      calToday = calStart;
       calEnd = Calendar.getInstance();
+      // start from yesterday
+      calStart.add(Calendar.DATE, -1);
       calEnd.add(Calendar.DATE, 52*7); // add a year
     }
     else {
@@ -242,10 +280,17 @@ class WidgetDisplay implements RemoteViewsService.RemoteViewsFactory {
         if (calendar.contains("Birthdays")) { continue; }
         calendarIDKey = calendarID;
         calendarMap.put(calendarID, calendar);
+        sortedCalendarMap.put(calendar, calendarID);
         calendarColourMap.put(calendar, calendarColour);
-        loopThroughRows();
       }
       calendarCursor.close();
+
+      // now output to collection with a calendar name sequence
+      // note: the sortedcalendarMap has keys and vales reversed so it will be in calendar name sequence
+      for(Map.Entry<String,String> entry : sortedCalendarMap.entrySet()) {
+        calendarIDKey = entry.getValue();
+        loopThroughRows();
+      }
     }
     else
       {loopThroughRows();}
@@ -318,6 +363,12 @@ class WidgetDisplay implements RemoteViewsService.RemoteViewsFactory {
       Date startDate = new Date(cursor.getLong(dtStartColumn));
       int colour = cursor.getInt(colourColumn);
       String hexColour = String.format("#%06X", (0xFFFFFF & colour));
+
+      // if using the default date range, ignore any date earlier than today
+      // this was coded because the current day items were not being returned based on time
+      if (isDefaultDateRange) {
+        if (calStart.before(calToday)) {continue;}
+      }
 
       String location = cursor.getString(eventLocation);
 
