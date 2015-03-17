@@ -39,6 +39,10 @@ package com.benny.calendarEvents;
 // 15 Mar 2015
 // added preference for displaying the list in calendar sequence
 
+// 17 Mar 2015
+// removed unused lines
+// added opacity to calendar names rows
+
 // TODO header not being updated when preference change or refresh
 // TODO savedInstance
 

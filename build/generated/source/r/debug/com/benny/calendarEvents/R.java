@@ -183,31 +183,28 @@ containing a value of this type.
         public static final int yellow=0x7f06008c;
     }
     public static final class drawable {
-        public static final int blue=0x7f02000b;
+        public static final int blue=0x7f020008;
         public static final int box1=0x7f020000;
         public static final int calendar=0x7f020001;
         public static final int customtoastborder=0x7f020002;
-        public static final int darkblue=0x7f02000c;
-        public static final int darkgreen=0x7f02000d;
-        public static final int darkorange=0x7f02000e;
-        public static final int darkpurple=0x7f02000f;
-        public static final int darkred=0x7f020010;
-        public static final int green=0x7f020011;
+        public static final int darkblue=0x7f020009;
+        public static final int darkgreen=0x7f02000a;
+        public static final int darkorange=0x7f02000b;
+        public static final int darkpurple=0x7f02000c;
+        public static final int darkred=0x7f02000d;
+        public static final int green=0x7f02000e;
         public static final int ic_launcher=0x7f020003;
         public static final int item_bg_dark=0x7f020004;
         public static final int layer_list=0x7f020005;
-        public static final int orange=0x7f020012;
+        public static final int orange=0x7f02000f;
         public static final int preferences=0x7f020006;
-        public static final int purple=0x7f020013;
-        public static final int red=0x7f020014;
+        public static final int purple=0x7f020010;
+        public static final int red=0x7f020011;
         public static final int refresh=0x7f020007;
-        public static final int screen_background_black=0x7f020015;
-        public static final int seek_thumb_disabled=0x7f020008;
-        public static final int seek_thumb_normal=0x7f020009;
-        public static final int seek_thumb_pressed=0x7f02000a;
-        public static final int translucent_background=0x7f020016;
-        public static final int transparent_background=0x7f020017;
-        public static final int yellow=0x7f020018;
+        public static final int screen_background_black=0x7f020012;
+        public static final int translucent_background=0x7f020013;
+        public static final int transparent_background=0x7f020014;
+        public static final int yellow=0x7f020015;
     }
     public static final class id {
         public static final int button_row=0x7f0a000e;

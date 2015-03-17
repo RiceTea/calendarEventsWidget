@@ -29,7 +29,6 @@ public class WidgetService extends RemoteViewsService {
   public RemoteViewsFactory onGetViewFactory(Intent intent) {
     return(new WidgetDisplay(this.getApplicationContext(), intent));
   }
-
 }  // end of WidgetService
 
 
@@ -49,8 +48,6 @@ class WidgetDisplay implements RemoteViewsService.RemoteViewsFactory {
   Calendar calEnd;
 
 
-
-
   SharedPreferences prefs;
 
   String dateRangeString;
@@ -61,17 +58,10 @@ class WidgetDisplay implements RemoteViewsService.RemoteViewsFactory {
   String aFewSpaces = "&nbsp;&nbsp;&nbsp;&nbsp;";
   String someSpaces = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
   String headerString = "<!--header-->";
-//  Spanned spanTest;
-//  String spanTestString;
-
 
   List<Spanned> mCollections = new ArrayList<>();
   HashMap<String, String> calendarMap =  new HashMap<>();
   HashMap<String, Integer> calendarColourMap =  new HashMap<>();
-
-  // ----------------------------------------------------------------------- //
-  //public static  long milliseconds = AlarmManager.INTERVAL_HOUR;
-  // ----------------------------------------------------------------------- //
 
 
   public WidgetDisplay(Context context, Intent intent) {
@@ -138,8 +128,8 @@ class WidgetDisplay implements RemoteViewsService.RemoteViewsFactory {
       int startIndex = temp.indexOf("---");
       int endIndex = startIndex+3+temp.substring(startIndex+3).indexOf("---");
       int calendarColour =  calendarColourMap.get(temp.substring(startIndex+3, endIndex));
-      // TODO possibly make background have some transparency
-      rvRow.setInt(R.id.widget_item, "setBackgroundColor",  calendarColour);
+      // using opacity of 112
+      rvRow.setInt(R.id.widget_item, "setBackgroundColor",  Color.parseColor(String.format("#%06X", (0x70FFFFFF & calendarColour))));
     }
     else {
       rvRow.setInt(R.id.widget_item, "setBackgroundColor",  Color.argb(54,161,162,156));
@@ -367,68 +357,6 @@ class WidgetDisplay implements RemoteViewsService.RemoteViewsFactory {
     numberOfItems = mCollections.size();
     }  // end of loopThroughRows
 
-
-
   }  // end of WidgetDisplay class
-
-
-
-
-
-
-
-
-//    Spanned spanTest;
-//    String spanTestString;
-//    spanTestString = "<br><b><font color='#0f0ffc'>" + selection + " </font>";
-//    spanTest = Html.fromHtml(spanTestString);
-//    mCollections.add(spanTest);
-//
-
-
-
-
-
-
-// put a coloured box in front of the title
-//"<br><big><font  color='" + hexColor + "'>&#9632; "   + "</font></big>" +
-
-
-//    Uri uri = CalendarContract.Calendars.CONTENT_URI;
-//    String[] projection = new String[] {
-//        CalendarContract.Calendars._ID,
-//        CalendarContract.Calendars.ACCOUNT_NAME,
-//        CalendarContract.Calendars.CALENDAR_DISPLAY_NAME,
-//        CalendarContract.Calendars.NAME,
-//        CalendarContract.Calendars.CALENDAR_COLOR
-//    };
-
-
-
-//      Log.i(tag,"-----------------------------------------------------------\n");
-//      Log.i(tag,"title: "+title+"\n");
-//      Log.i(tag,"description: "+description+"\n");
-//      Log.i(tag,"startDate: "+startDate+"\n");
-//      Log.i(tag,"colour: "+colour+"\n");
-//      Log.i(tag,"colour: "+hexColour+"\n");
-
-
-
-//    // verify dictionary is valid
-//    for (String key : calendarMap.keySet()) {
-//      spanCalendarsString += "<br><b><font color='#ff0f0c'>" + key + ":"  + calendarMap.get(key) + " </font>";
-//    }
-//
-//    spanCalendars = Html.fromHtml(spanCalendarsString);
-//    mCollections.add(spanCalendars);
-
-//    String selectionTest = "((" + CalendarContract.Events.DTSTART +
-//        " >= %s) AND (" + CalendarContract.Events.DTEND + " <= %s))";
-//    String formatted = String.format(selectionTest, stringDateStartInMillseconds, stringDateEndinMilliseconds);
-//    Spanned spanTest = Html.fromHtml(formatted);
-//    mCollections.add(spanTest);
-//    cursor = contentResolver.query(CalendarContract.Events.CONTENT_URI,  null, formatted, null, "dtstart ASC");
-
-
 
 
